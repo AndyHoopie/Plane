@@ -52,8 +52,8 @@ void loop() {
   if (data.y<400 || data.y>600) {
     servoY.write(data.y) ;
   }   
-  data.throttle = map(data.throttle, 0, 60, 0, 255); //TODO: update when we have motor
-  Serial.print("Throttle:");
-  Serial.println(data.throttle);
-  analogWrite(4, 255);
+//  data.throttle = map(data.throttle, 0, 60, 0, 255); //TODO: update when we have motor
+//  Serial.print("Throttle:");
+//  Serial.println(data.throttle);
+//  analogWrite(4, 255);
 }
