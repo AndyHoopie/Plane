@@ -7,8 +7,8 @@ const byte address[6] = "00001";
 //#define outputA 3
 //#define outputB 4
 
-int x_key = A1;                                               
-int y_key = A2;                                               
+int x_key = A0;                                               
+int y_key = A1;                                               
 int x_pos;
 int y_pos;
 int counter = 0; 
