@@ -16,9 +16,9 @@ int servo_motor_pin = 9;
 unsigned long startTime;
 
 struct Signal {
-int x;
-int y;
-int throttle;
+  int x;
+  int y;
+  int throttle;
 };
 
 Signal data;
@@ -34,8 +34,8 @@ void setup() {
   data.x = 0;
   data.y = 0;
   data.throttle = 0;
-  
-  radio.begin(); 
+
+  radio.begin();
   radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
@@ -44,21 +44,23 @@ void setup() {
 }
 
 void loop() {
- if (!radio.available()) { return; }
- 
+  if (!radio.available()) {
+    return;
+  }
+
   radio.read(&data, sizeof(Signal));
-  
+
   data.x = map(data.x, 0, 1023, 0, 180);
   data.y = map(data.y, 0, 1023, 0, 180);
-  
-  servoX.write(data.x) ;
-  servoY.write(data.y) ; 
 
-   data.throttle = map(data.throttle, 0, 1023, 0, 180);
-   
-   if (data.throttle<10) {
+  servoX.write(data.x);
+  servoY.write(data.y);
+
+  data.throttle = map(data.throttle, 0, 1023, 0, 180);
+
+  if (data.throttle < 10) {
     data.throttle = 0;
-   }
-
-   servoMotor.write(data.throttle) ; 
   }
+
+  servoMotor.write(data.throttle);
+}
