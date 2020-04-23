@@ -5,11 +5,15 @@
 
 Servo servoX;
 Servo servoY;
-//Servo ESC;
+Servo servoMotor;
+
 RF24 radio(7, 8); // CSN, CE
 const byte address[6] = "00001";
 int servo_x_pin = 6;
 int servo_y_pin = 5;
+int servo_motor_pin = 9;
+
+unsigned long startTime;
 
 struct Signal {
 int x;
@@ -25,6 +29,7 @@ void setup() {
 
   servoX.attach(servo_x_pin);
   servoY.attach(servo_y_pin);
+  servoMotor.attach(servo_motor_pin, 1000, 2000);
 
   data.x = 0;
   data.y = 0;
@@ -34,27 +39,26 @@ void setup() {
   radio.openReadingPipe(0, address);
   radio.setPALevel(RF24_PA_MIN);
   radio.startListening();
+
+  startTime = millis();
 }
 
 void loop() {
-  //   Serial.println("penis");
  if (!radio.available()) { return; }
-// Serial.println("vagina");
  
   radio.read(&data, sizeof(Signal));
   
   data.x = map(data.x, 0, 1023, 0, 180);
   data.y = map(data.y, 0, 1023, 0, 180);
   
-  if (data.x<400 || data.x>600) {
-    servoX.write(data.x) ;
+  servoX.write(data.x) ;
+  servoY.write(data.y) ; 
+
+   data.throttle = map(data.throttle, 0, 1023, 0, 180);
+   
+   if (data.throttle<10) {
+    data.throttle = 0;
+   }
+
+   servoMotor.write(data.throttle) ; 
   }
-  
-  if (data.y<400 || data.y>600) {
-    servoY.write(data.y) ;
-  }   
-//  data.throttle = map(data.throttle, 0, 60, 0, 255); //TODO: update when we have motor
-//  Serial.print("Throttle:");
-//  Serial.println(data.throttle);
-//  analogWrite(4, 255);
-}

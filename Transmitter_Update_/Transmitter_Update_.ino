@@ -4,13 +4,11 @@
 RF24 radio(7, 8); // CSN, CE
 const byte address[6] = "00001";
 
-//#define outputA 3
-//#define outputB 4
-
-int x_key = A0;                                               
-int y_key = A1;                                               
-int x_pos;
-int y_pos;
+const int x_key = A1;                                               
+const int y_key = A2; 
+const int a_key = 3;
+const int b_key = 4;     
+                                         
 int counter = 0; 
 int aState;
 int bState;
@@ -29,8 +27,8 @@ void setup() {
   radio.setPALevel(RF24_PA_MIN);
   radio.stopListening();
   
-//  pinMode (outputA,INPUT);
-//  pinMode (outputB,INPUT);
+  pinMode (a_key,INPUT);
+  pinMode (b_key,INPUT);
   pinMode (x_key, INPUT) ;                     
   pinMode (y_key, INPUT) ;  
 
@@ -43,19 +41,14 @@ void setup() {
 
 
 void loop() { 
- /* aState = digitalRead(outputA);
-  bState = digitalRead(outputB);
+  aState = digitalRead(a_key);
+  bState = digitalRead(b_key);
   
-  if (aState == 0 && bState == 1) {
-    counter++;
-  } else if (aState == 1 && bState == 0) {
-    counter--;
-  }
+  int sensorValue = analogRead(A0);
 
-  counter = max(min(60, counter), 0);
-  */
-  data.throttle = counter;
+  data.throttle = sensorValue;
   data.x = analogRead (x_key) ;  
   data.y = analogRead (y_key) ; 
+
   radio.write(&data, sizeof(Signal));
  }
