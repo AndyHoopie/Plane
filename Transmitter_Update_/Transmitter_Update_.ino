@@ -50,5 +50,9 @@ void loop() {
   data.x = analogRead (x_key) ;
   data.y = analogRead (y_key) ;
 
+Serial.println (data.x);
+Serial.println (data.y);
+Serial.println (data.throttle);
+
   radio.write(&data, sizeof(Signal));
 }

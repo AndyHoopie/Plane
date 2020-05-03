@@ -6,12 +6,15 @@
 Servo servoX;
 Servo servoY;
 Servo servoMotor;
+Servo servoParachute;
 
 RF24 radio(7, 8); // CSN, CE
+
 const byte address[6] = "00001";
 int servo_x_pin = 6;
 int servo_y_pin = 5;
 int servo_motor_pin = 9;
+int servo_parachute_pin =4 ;
 
 unsigned long startTime;
 
@@ -19,6 +22,7 @@ struct Signal {
   int x;
   int y;
   int throttle;
+  
 };
 
 Signal data;
@@ -44,15 +48,24 @@ void setup() {
 }
 
 void loop() {
+  int counter;
+
+  
+//  Serial.println ("no good hombre");
   if (!radio.available()) {
     return;
   }
-
+Serial.println ("oh baby");
+  
   radio.read(&data, sizeof(Signal));
 
   data.x = map(data.x, 0, 1023, 0, 180);
   data.y = map(data.y, 0, 1023, 0, 180);
 
+  if (data.y < 90) {
+    data.y = map(data.y, 0, 90, 65, 90);
+  }
+  
   servoX.write(data.x);
   servoY.write(data.y);
 
@@ -62,5 +75,9 @@ void loop() {
     data.throttle = 0;
   }
 
+  Serial.println(data.throttle);
+
   servoMotor.write(data.throttle);
+ 
+  
 }
