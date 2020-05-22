@@ -1,8 +1,9 @@
 #include <SPI.h>
 #include <nRF24L01.h>
 #include <RF24.h>
-RF24 radio(7, 8); // CSN, CE
+RF24 radio(7, 8); // CE, CSN
 const byte address[6] = "00001";
+
 
 const int x_key = A1;
 const int y_key = A2;
@@ -12,6 +13,10 @@ const int b_key = 4;
 int counter = 0;
 int aState;
 int bState;
+//int speakerPin = 9;
+// 
+//int numTones = 3;
+//int tones[] = {522, 698, 784};
 
 struct Signal {
   int x;
@@ -24,7 +29,7 @@ Signal data;
 void setup() {
   radio.begin();
   radio.openWritingPipe(address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(RF24_PA_LOW);
   radio.stopListening();
 
   pinMode (a_key, INPUT);
@@ -38,7 +43,6 @@ void setup() {
   data.y = 0;
   data.throttle = 0;
 }
-
 
 void loop() {
   aState = digitalRead(a_key);
